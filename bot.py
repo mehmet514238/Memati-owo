@@ -2,6 +2,10 @@ import discord
 from discord.ext import commands
 import sqlite3
 import re
+import os
+import subprocess
+import asyncio
+from discord import app_commands
 
 # Veritabanı bağlantısı
 conn = sqlite3.connect("owo_data.db")
@@ -27,9 +31,15 @@ CAPTCHA_LIMIT = 10  # Varsayılan CAPTCHA limit
 is_bot_paused = False  # Botun duraklatılma durumu
 prefix = "!"  # Başlangıç prefix'i
 
+# GitHub Repo bilgileri
+GITHUB_REPO_DIR = "/path/to/your/repo"  # GitHub repo dizininizin yolu
+GITHUB_REPO_URL = "https://github.com/username/repository.git"  # GitHub repo URL'si
+
+# Slash komutlarını senkronize et
 @bot.event
 async def on_ready():
     print(f'{bot.user} olarak giriş yapıldı.')
+    await bot.tree.sync()
 
 # Kullanıcı ID'sini kaydetme komutu
 @bot.command()
@@ -181,10 +191,20 @@ async def yardım(ctx):
         "**!pray aç/kapa** - Otomatik pray özelliğini açar veya kapatır.\n"
         "**!miktar başlangıç_miktarı** - Başlangıç miktarını gösterir veya değiştirir.\n"
         "**!kar_zarar** - Kar-zarar durumunuzu gösterir.\n"
-        "**!prefix ayarlanacak_prefix** - Botun geçerli prefix'ini değiştirir.\n"
-        "**!yardım** - Mevcut komutları ve açıklamalarını listeler.\n"
+        "**!yardım** - Mevcut komutların listesini gösterir.\n"
     )
-    await ctx.send(f"**Yardım Menüsü**\n{yardım_mesajı}")
+    await ctx.send(yardım_mesajı)
 
-# Botu Çalıştırma
-bot.run("BOT_TOKENINIZ")  # BOT_TOKENINIZ kısmına kendi bot token'ınızı ekleyin.
+# GitHub Repo Güncelleme Komutu
+@bot.command()
+async def repo_guncelle(ctx):
+    await ctx.send("GitHub reposu güncelleniyor...")
+    try:
+        # GitHub repo klasörüne git
+        subprocess.run(["git", "pull", "origin", "main"], cwd=GITHUB_REPO_DIR, check=True)
+        await ctx.send("GitHub reposu başarıyla güncellendi.")
+    except subprocess.CalledProcessError:
+        await ctx.send("GitHub repo güncellenirken bir hata oluştu.")
+
+# Botu çalıştırma
+bot.run("YOUR_BOT_TOKEN")
