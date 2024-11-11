@@ -67,7 +67,7 @@ async def kar_zarar(ctx):
 # Kâr/Zarar Verilerini OwO Botundan Alma
 @bot.event
 async def on_message(message):
-    owo_bot_id = 123456789012345678  # OwO botunun ID'sini buraya yazın
+    owo_bot_id = 408785106942164992 # OwO botunun ID'sini buraya yazın
     
     if message.author.id == owo_bot_id:  # Eğer mesaj OwO botundan geldiyse
         # Mesajın içeriğini kontrol et
@@ -207,4 +207,4 @@ async def repo_guncelle(ctx):
         await ctx.send("GitHub repo güncellenirken bir hata oluştu.")
 
 # Botu çalıştırma
-bot.run("YOUR_BOT_TOKEN")
+bot.run("")
